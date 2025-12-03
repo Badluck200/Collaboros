@@ -48,8 +48,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         password: '',
         userType: 'creative',
       });
-    } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+    } catch (err: unknown) {
+      const message = err && typeof err === 'object' && 'message' in err ? String((err as { message?: string }).message) : 'Authentication failed';
+      setError(message);
     } finally {
       setLoading(false);
     }

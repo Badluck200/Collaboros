@@ -10,7 +10,7 @@ const router = Router();
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const { status, category, minBudget, maxBudget } = req.query;
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (status) query.status = status;
     else query.status = 'open'; // Default to open jobs
@@ -18,9 +18,9 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     if (category) query.category = category;
 
     if (minBudget || maxBudget) {
-      query['budget.min'] = { $gte: minBudget ? parseInt(minBudget as string) : 0 };
+      query['budget.min'] = { $gte: minBudget ? parseInt(minBudget as string, 10) : 0 };
       if (maxBudget) {
-        query['budget.max'] = { $lte: parseInt(maxBudget as string) };
+        query['budget.max'] = { $lte: parseInt(maxBudget as string, 10) };
       }
     }
 

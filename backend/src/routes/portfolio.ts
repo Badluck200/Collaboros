@@ -10,7 +10,7 @@ const router = Router();
 router.get('/browse', async (req: Request, res: Response): Promise<void> => {
   try {
     const { maturity, category, userId, archived } = req.query;
-    const query: any = { isHidden: false };
+    const query: Record<string, unknown> = { isHidden: false };
 
     if (maturity) query.maturity = maturity;
     if (category) query.category = category;

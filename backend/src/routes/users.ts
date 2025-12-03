@@ -95,7 +95,7 @@ router.put('/settings/preferences', authMiddleware, async (req: AuthRequest, res
 router.get('/search/creatives', async (req: Request, res: Response): Promise<void> => {
   try {
     const { query, location, userType } = req.query;
-    const searchQuery: any = { userType: 'creative', 'settings.isPublic': true };
+    const searchQuery: Record<string, unknown> = { userType: 'creative', 'settings.isPublic': true };
 
     if (query) {
       searchQuery.$or = [

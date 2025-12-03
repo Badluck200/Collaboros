@@ -1,7 +1,7 @@
 'use client';
 
 import Navbar from '@/components/Navigation/Navbar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { getConversations, getConversation, sendMessage, searchUserByUsername } from '@/services/api';
 
@@ -34,19 +34,7 @@ export default function Messages() {
   const [searchError, setSearchError] = useState('');
   const [searching, setSearching] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated && token) {
-      loadConversations();
-    }
-  }, [isAuthenticated, token]);
-
-  useEffect(() => {
-    if (selectedUserId && token) {
-      loadMessages(selectedUserId);
-    }
-  }, [selectedUserId, token]);
-
-  const loadConversations = async () => {
+  const loadConversations = useCallback(async () => {
     try {
       const data = await getConversations(token!);
       setConversations(data);
@@ -62,7 +50,31 @@ export default function Messages() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, selectedUserId, user]);
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      loadConversations();
+    }
+  }, [isAuthenticated, token, loadConversations]);
+
+  const loadMessagesCb = useCallback(async (userId: string) => {
+    try {
+      const data = await getConversation(token!, userId);
+      setMessages(data);
+    } catch (error) {
+      console.error('Failed to load messages:', error);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (selectedUserId && token) {
+      loadMessagesCb(selectedUserId);
+    }
+  }, [selectedUserId, token, loadMessagesCb]);
+
+  // Remove duplicate definition; use the useCallback variant above
+  // Duplicate definition removed (use the useCallback version above)
 
   const loadMessages = async (userId: string) => {
     try {
