@@ -5,6 +5,7 @@ export interface IUser extends Document {
   firstName: string;
   lastName: string;
   username: string;
+  displayName?: string;
   email: string;
   password: string;
   userType: 'creative' | 'client';
@@ -36,6 +37,10 @@ const userSchema = new Schema<IUser>(
       required: true,
       unique: true,
       match: /^[a-zA-Z0-9_]+#\d{4}$/,
+    },
+    displayName: {
+      type: String,
+      maxlength: 50,
     },
     email: {
       type: String,

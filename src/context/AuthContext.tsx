@@ -8,6 +8,7 @@ interface User {
   firstName: string;
   lastName: string;
   username: string;
+  displayName?: string;
   email: string;
   userType: 'creative' | 'client';
   bio?: string;

@@ -46,7 +46,7 @@ export default function Profile() {
                 <div className="w-full h-full bg-cover bg-center" style={{backgroundImage: "url('/images/profile-avatar.jpg')"}}></div>
               </div>
               <div className="text-white">
-                <h1 className="text-4xl font-bold mb-2">{user.firstName} {user.lastName}</h1>
+                <h1 className="text-4xl font-bold mb-2">{user.displayName || `${user.firstName} ${user.lastName}`}</h1>
                 <p className="text-xl opacity-90">{user.userType === 'creative' ? 'Creative Professional' : 'Client'}</p>
                 <div className="flex items-center gap-4 text-sm opacity-75 mt-2">
                   {user.location && <span>{user.location}</span>}
@@ -185,6 +185,15 @@ export default function Profile() {
                     value={user.username}
                     readOnly
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 bg-gray-100 focus:outline-none font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Display Name</label>
+                  <input
+                    type="text"
+                    defaultValue={user.displayName || ''}
+                    placeholder="How you want to be shown (leave empty to use First Last)"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
                   />
                 </div>
                 <div>
