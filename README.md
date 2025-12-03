@@ -2,7 +2,7 @@
 
 A modern, full-stack platform for graphic designers and photographers to showcase work, collaborate with clients, and get hired. Clients can browse creatives, request projects, and manage deliverables.
 
-## 🎨 Project Overview
+##  Project Overview
 
 **Concept:** A curated, high-quality marketplace and portfolio hub for creatives combining portfolio display, job requests, messaging, and client management.
 
@@ -12,7 +12,7 @@ A modern, full-stack platform for graphic designers and photographers to showcas
 - **Database:** MongoDB
 - **Authentication:** JWT (JSON Web Tokens)
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 collaboros/
@@ -33,7 +33,7 @@ collaboros/
 └── README.md            # This file
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Node.js 16+
@@ -84,21 +84,21 @@ npm run dev
 
 Backend will be available at: `http://localhost:5000`
 
-## 🎯 MVP Features
+##  MVP Features
 
 ### For Creatives:
-- ✅ User profile and portfolio creation
-- ✅ Upload and showcase work (images with descriptions and tags)
-- ✅ **Post archive/hide** - Remove posts from public view without deleting
-- ✅ **Maturity settings** - Mark work as Safe for Work or +18
+-  User profile and portfolio creation
+-  Upload and showcase work (images with descriptions and tags)
+-  **Post archive/hide** - Remove posts from public view without deleting
+-  **Maturity settings** - Mark work as Safe for Work or +18
 - Receive and manage job requests
 - Deliver files to clients
 - Messaging with clients
 - Track ratings and reviews
 
 ### For Clients:
-- ✅ Browse and filter creatives by style, location, service
-- ✅ **Maturity filter** - Toggle +18 content on/off in account settings
+-  Browse and filter creatives by style, location, service
+-  **Maturity filter** - Toggle +18 content on/off in account settings
 - Search and discover portfolios
 - Post job requests
 - Message with creatives
@@ -106,15 +106,15 @@ Backend will be available at: `http://localhost:5000`
 - Rate and review work
 
 ### Platform Features:
-- ✅ Clean, modern, warm aesthetic (amber brown accent colors)
-- ✅ Professional portfolio display
-- ✅ Content moderation for mature work
-- ✅ User authentication (JWT)
-- ✅ MongoDB database with comprehensive models
+-  Clean, modern, warm aesthetic (amber brown accent colors)
+-  Professional portfolio display
+-  Content moderation for mature work
+   User authentication (JWT)
+-  MongoDB database with comprehensive models
 - Real-time messaging
 - Reviews and ratings system
 
-## 🎨 Design
+##  Design
 
 **Style:** Clean, modern, visual-first with a warm, cozy aesthetic
 
@@ -128,7 +128,7 @@ Backend will be available at: `http://localhost:5000`
 
 **Logo:** Circular "C" inspired by Ouroboros (continuous creative cycle)
 
-## 📸 Adding Images
+##  Adding Images
 
 1. Prepare your images (recommended formats: .jpg, .webp, .png)
 2. Place them in `public/images/` folder
@@ -141,7 +141,7 @@ Backend will be available at: `http://localhost:5000`
 
 See `public/images/README.md` for detailed guidelines.
 
-## 📦 Database Models
+##  Database Models
 
 ### User
 - Authentication and profile information
@@ -170,7 +170,7 @@ See `public/images/README.md` for detailed guidelines.
 - Star ratings (1-5)
 - Comments
 
-## 🔑 API Endpoints
+##  API Endpoints
 
 ### Authentication
 - `POST /api/auth/register` - Register new user
@@ -178,7 +178,7 @@ See `public/images/README.md` for detailed guidelines.
 
 *(Additional endpoints for portfolio, jobs, messaging coming soon)*
 
-## 🛠️ Development
+##  Development
 
 ### Frontend Commands
 ```bash
