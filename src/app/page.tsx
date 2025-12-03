@@ -43,13 +43,6 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-rose-50">
       <Navbar />
 
-      {apiConnected && (
-        <div className="bg-green-100 border-l-4 border-green-700 text-green-700 p-4">
-          <div className="max-w-7xl mx-auto">
-            <p className="font-semibold">✓ Connected to Collaboros API</p>
-          </div>
-        </div>
-      )}
       {!apiConnected && !loading && (
         <div className="bg-amber-100 border-l-4 border-amber-700 text-amber-700 p-4">
           <div className="max-w-7xl mx-auto">
