@@ -66,14 +66,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await loginUser(email, password);
-      setToken(response.token);
-      localStorage.setItem('auth_token', response.token);
-      await fetchCurrentUser(response.token);
-    } catch (error) {
-      throw error;
-    }
+    const response = await loginUser(email, password);
+    setToken(response.token);
+    localStorage.setItem('auth_token', response.token);
+    await fetchCurrentUser(response.token);
   };
 
   const register = async (data: {
@@ -83,14 +79,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string;
     userType: 'creative' | 'client';
   }) => {
-    try {
-      const response = await registerUser(data);
-      setToken(response.token);
-      localStorage.setItem('auth_token', response.token);
-      await fetchCurrentUser(response.token);
-    } catch (error) {
-      throw error;
-    }
+    const response = await registerUser(data);
+    setToken(response.token);
+    localStorage.setItem('auth_token', response.token);
+    await fetchCurrentUser(response.token);
   };
 
   const logout = () => {

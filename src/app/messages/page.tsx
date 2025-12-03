@@ -76,14 +76,8 @@ export default function Messages() {
   // Remove duplicate definition; use the useCallback variant above
   // Duplicate definition removed (use the useCallback version above)
 
-  const loadMessages = async (userId: string) => {
-    try {
-      const data = await getConversation(token!, userId);
-      setMessages(data);
-    } catch (error) {
-      console.error('Failed to load messages:', error);
-    }
-  };
+  // Use the memoized version exclusively to satisfy hooks/exhaustive-deps
+  const loadMessages = loadMessagesCb;
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
