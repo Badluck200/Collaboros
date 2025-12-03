@@ -55,7 +55,8 @@ export default function Jobs() {
       if (categoryFilter !== 'all') filters.category = categoryFilter;
 
       const data = await getJobs(filters as { status?: string; category?: string });
-      setJobs(data);
+      // API returns populated clientId as object
+      setJobs(data as unknown as Job[]);
     } catch (err) {
       setError('Failed to load jobs');
       console.error(err);
