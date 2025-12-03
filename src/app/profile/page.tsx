@@ -3,9 +3,35 @@
 import Navbar from '@/components/Navigation/Navbar';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Profile() {
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'portfolio' | 'settings'>('portfolio');
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+          <p className="text-gray-600">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -20,9 +46,12 @@ export default function Profile() {
                 <div className="w-full h-full bg-cover bg-center" style={{backgroundImage: "url('/images/profile-avatar.jpg')"}}></div>
               </div>
               <div className="text-white">
-                <h1 className="text-4xl font-bold mb-2">John Designer</h1>
-                <p className="text-xl opacity-90">Graphic Designer • Brand Specialist</p>
-                <p className="text-sm opacity-75 mt-2">New York, NY • Member since 2024</p>
+                <h1 className="text-4xl font-bold mb-2">{user.firstName} {user.lastName}</h1>
+                <p className="text-xl opacity-90">{user.userType === 'creative' ? 'Creative Professional' : 'Client'}</p>
+                <div className="flex items-center gap-4 text-sm opacity-75 mt-2">
+                  {user.location && <span>{user.location}</span>}
+                  <span className="font-mono text-amber-200">{user.username}</span>
+                </div>
               </div>
             </div>
             <button className="bg-white text-amber-700 px-6 py-2 rounded-lg hover:bg-amber-50 transition font-semibold">
@@ -144,26 +173,53 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <input
                     type="email"
-                    value="john@example.com"
+                    value={user.email}
                     readOnly
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 bg-white focus:outline-none"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 bg-gray-100 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Username</label>
                   <input
                     type="text"
-                    value="John Designer"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    value={user.username}
+                    readOnly
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 bg-gray-100 focus:outline-none font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                  <input
+                    type="text"
+                    value={user.firstName}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    value={user.lastName}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
                   <textarea
-                    value="Passionate graphic designer specializing in brand identity."
+                    value={user.bio || ''}
                     rows={4}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    placeholder="Tell us about yourself..."
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
                   ></textarea>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <input
+                    type="text"
+                    value={user.location || ''}
+                    placeholder="City, State"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
+                  />
                 </div>
               </div>
             </div>
@@ -187,8 +243,8 @@ export default function Profile() {
                   <label className="flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      defaultChecked={true}
-                      className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-600"
+                      defaultChecked={user.settings.maturityFilter}
+                      className="w-5 h-5 text-amber-700 rounded focus:ring-2 focus:ring-amber-700"
                     />
                     <span className="ml-3 text-gray-700 font-semibold">Hide +18 Content (Safe for Work)</span>
                   </label>
@@ -206,18 +262,18 @@ export default function Profile() {
                 <h4 className="font-bold text-gray-900 mb-4">Privacy</h4>
                 <div className="space-y-4">
                   <label className="flex items-center">
-                    <input type="checkbox" defaultChecked={true} className="w-5 h-5 text-blue-600 rounded" />
+                    <input type="checkbox" defaultChecked={user.settings.isPublic} className="w-5 h-5 text-amber-700 rounded" />
                     <span className="ml-3 text-gray-700">Make my profile public</span>
                   </label>
                   <label className="flex items-center">
-                    <input type="checkbox" className="w-5 h-5 text-blue-600 rounded" />
+                    <input type="checkbox" defaultChecked={user.settings.allowMessaging} className="w-5 h-5 text-amber-700 rounded" />
                     <span className="ml-3 text-gray-700">Allow clients to contact me</span>
                   </label>
                 </div>
               </div>
 
               {/* Save Button */}
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+              <button className="w-full bg-amber-700 text-white py-3 rounded-lg hover:bg-amber-800 transition font-semibold">
                 Save Changes
               </button>
             </div>
