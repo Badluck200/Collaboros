@@ -101,7 +101,4 @@ userSchema.methods.comparePassword = async function (password: string): Promise<
   return bcrypt.compare(password, this.password);
 };
 
-// Index for username search
-userSchema.index({ username: 1 });
-
 export const User = mongoose.model<IUser>('User', userSchema);
