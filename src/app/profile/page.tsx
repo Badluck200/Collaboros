@@ -2,15 +2,24 @@
 
 import Navbar from '@/components/Navigation/Navbar';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { updateUserProfile } from '@/services/api';
 
 export default function Profile() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, token, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'portfolio' | 'settings'>('portfolio');
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+  
+  // Form refs
+  const displayNameRef = useRef<HTMLInputElement>(null);
+  const firstNameRef = useRef<HTMLInputElement>(null);
+  const lastNameRef = useRef<HTMLInputElement>(null);
+  const bioRef = useRef<HTMLTextAreaElement>(null);
+  const locationRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -32,6 +41,34 @@ export default function Profile() {
   if (!user) {
     return null;
   }
+
+  const handleSaveProfile = async () => {
+    if (!token) return;
+    
+    setSaving(true);
+    setSaveMessage('');
+    
+    try {
+      const updateData = {
+        displayName: displayNameRef.current?.value || undefined,
+        firstName: firstNameRef.current?.value,
+        lastName: lastNameRef.current?.value,
+        bio: bioRef.current?.value,
+        location: locationRef.current?.value,
+      };
+      
+      await updateUserProfile(token, updateData);
+      setSaveMessage('Profile updated successfully!');
+      
+      // Refresh page to show updated data
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (error) {
+      setSaveMessage('Failed to update profile. Please try again.');
+      console.error(error);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -190,6 +227,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Display Name</label>
                   <input
+                    ref={displayNameRef}
                     type="text"
                     defaultValue={user.displayName || ''}
                     placeholder="How you want to be shown (leave empty to use First Last)"
@@ -199,23 +237,26 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                   <input
+                    ref={firstNameRef}
                     type="text"
-                    value={user.firstName}
+                    defaultValue={user.firstName}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                   <input
+                    ref={lastNameRef}
                     type="text"
-                    value={user.lastName}
+                    defaultValue={user.lastName}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
                   <textarea
-                    value={user.bio || ''}
+                    ref={bioRef}
+                    defaultValue={user.bio || ''}
                     rows={4}
                     placeholder="Tell us about yourself..."
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
@@ -224,8 +265,9 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                   <input
+                    ref={locationRef}
                     type="text"
-                    value={user.location || ''}
+                    defaultValue={user.location || ''}
                     placeholder="City, State"
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-700"
                   />
@@ -282,8 +324,17 @@ export default function Profile() {
               </div>
 
               {/* Save Button */}
-              <button className="w-full bg-amber-700 text-white py-3 rounded-lg hover:bg-amber-800 transition font-semibold">
-                Save Changes
+              {saveMessage && (
+                <div className={`mb-4 p-3 rounded-lg ${saveMessage.includes('success') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                  {saveMessage}
+                </div>
+              )}
+              <button 
+                onClick={handleSaveProfile}
+                disabled={saving}
+                className="w-full bg-amber-700 text-white py-3 rounded-lg hover:bg-amber-800 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {saving ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>
